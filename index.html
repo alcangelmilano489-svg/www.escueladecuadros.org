@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Escuela de Cuadros</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <!-- PANTALLA DE LOGIN -->
+    <div id="seccionLogin" class="admin-container">
+        <h2>📚 Panel de Control - Escuela de Cuadros</h2>
+        <p style="color: #718096; font-size: 14px; margin-bottom: 20px;">Selecciona tu estado e ingresa tu llave de acceso autorizada.</p>
+
+        <div class="form-group">
+            <label for="selectEstadoLogin">Seleccione su Estado</label>
+            <select id="selectEstadoLogin">
+                <option value="">-- Elija un Estado --</option>
+                <option value="Amazonas">Amazonas</option>
+                <option value="Anzoátegui">Anzoátegui</option>
+                <option value="Apure">Apure</option>
+                <option value="Aragua">Aragua</option>
+                <option value="Barinas">Barinas</option>
+                <option value="Bolívar">Bolívar</option>
+                <option value="Carabobo">Carabobo</option>
+                <option value="Cojedes">Cojedes</option>
+                <option value="Delta Amacuro">Delta Amacuro</option>
+                <option value="Distrito Capital">Distrito Capital</option>
+                <option value="Falcón">Falcón</option>
+                <option value="Guárico">Guárico</option>
+                <option value="Lara">Lara</option>
+                <option value="Mérida">Mérida</option>
+                <option value="Miranda">Miranda</option>
+                <option value="Monagas">Monagas</option>
+                <option value="Nueva Esparta">Nueva Esparta</option>
+                <option value="Portuguesa">Portuguesa</option>
+                <option value="Sucre">Sucre</option>
+                <option value="Táchira">Táchira</option>
+                <option value="Trujillo">Trujillo</option>
+                <option value="La Guaira">La Guaira</option>
+                <option value="Yaracuy">Yaracuy</option>
+                <option value="Zulia">Zulia</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="inputClave">Llave de Acceso</label>
+            <input type="password" id="inputClave" placeholder="Ingresa tu clave...">
+        </div>
+
+        <button class="btn-admin" onclick="ingresarPanel()">Entrar al Panel</button>
+
+        <div style="margin-top: 15px; text-align: center;">
+            <button onclick="mostrarSeccionRegistro()" style="background: none; border: none; color: #2b6cb0; cursor: pointer; font-weight: 600; font-size: 14px;">🔑 ¿No tienes clave o eres nuevo? Regístrala aquí</button>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="visita.html" style="color: #4a5568; text-decoration: none; font-size: 13px;">Ver Portal Público de Visitantes →</a>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE REGISTRO / GENERACIÓN DE LLAVE POR EL ADMINISTRADOR -->
+    <div id="seccionRegistro" class="admin-container" style="display: none;">
+        <h2>🔑 Generar / Registrar Clave de Estado</h2>
+        <p style="color: #718096; font-size: 14px; margin-bottom: 20px;">Crea la llave de acceso exclusiva para el administrador de tu estado.</p>
+
+        <div class="form-group">
+            <label for="selectEstadoRegistro">Seleccione su Estado</label>
+            <select id="selectEstadoRegistro">
+                <option value="">-- Elija un Estado --</option>
+                <option value="Amazonas">Amazonas</option>
+                <option value="Anzoátegui">Anzoátegui</option>
+                <option value="Apure">Apure</option>
+                <option value="Aragua">Aragua</option>
+                <option value="Barinas">Barinas</option>
+                <option value="Bolívar">Bolívar</option>
+                <option value="Carabobo">Carabobo</option>
+                <option value="Cojedes">Cojedes</option>
+                <option value="Delta Amacuro">Delta Amacuro</option>
+                <option value="Distrito Capital">Distrito Capital</option>
+                <option value="Falcón">Falcón</option>
+                <option value="Guárico">Guárico</option>
+                <option value="Lara">Lara</option>
+                <option value="Mérida">Mérida</option>
+                <option value="Miranda">Miranda</option>
+                <option value="Monagas">Monagas</option>
+                <option value="Nueva Esparta">Nueva Esparta</option>
+                <option value="Portuguesa">Portuguesa</option>
+                <option value="Sucre">Sucre</option>
+                <option value="Táchira">Táchira</option>
+                <option value="Trujillo">Trujillo</option>
+                <option value="La Guaira">La Guaira</option>
+                <option value="Yaracuy">Yaracuy</option>
+                <option value="Zulia">Zulia</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="inputNuevaClave">Nueva Llave de Acceso</label>
+            <input type="password" id="inputNuevaClave" placeholder="Crea tu contraseña secreta...">
+        </div>
+
+        <button class="btn-admin" onclick="guardarNuevaClave()" style="background-color: #48bb78;">Guardar y Generar Clave</button>
+        <button class="btn-admin" style="background-color: #718096; margin-top: 10px;" onclick="volverAlLogin()">← Volver al Login</button>
+    </div>
+
+    <!-- PANEL INTERNO DE ADMINISTRACIÓN -->
+    <div id="seccionPublicacion" class="admin-container" style="display: none;">
+        <h2>📝 Publicar Nuevo Contenido</h2>
+        <p id="txtEstadoActual" style="color: #48bb78; font-weight: bold; margin-bottom: 20px;"></p>
+
+        <div class="form-group">
+            <label for="inputTitulo">Título de la Publicación</label>
+            <input type="text" id="inputTitulo" placeholder="Ej: Convocatoria a formación...">
+        </div>
+
+        <div class="form-group">
+            <label for="inputContenidos">Contenido / Mensaje</label>
+            <textarea id="inputContenidos" rows="5" placeholder="Escribe los detalles aquí..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="inputImagen">Imagen (Opcional)</label>
+            <input type="file" id="inputImagen" accept="image/*">
+        </div>
+
+        <button class="btn-admin" onclick="publicarNoticia()">Publicar Ahora</button>
+        <button class="btn-admin" style="background-color: #e53e3e; margin-top: 10px;" onclick="cerrarSesion()">Cerrar Sesión</button>
+
+        <!-- SECCIÓN DENTRO DEL ADMIN PARA GESTIONAR/BORRAR PUBLICACIONES DE SU ESTADO -->
+        <div style="margin-top: 35px; border-top: 2px solid #edf2f7; padding-top: 20px;">
+            <h3 style="color: #1a365d; font-size: 18px; margin-bottom: 15px;">Gestión de Publicaciones Anteriores</h3>
+            <div id="listaAdminPublicaciones"></div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener claves guardadas o usar unas por defecto si no existen
+        function obtenerClavesRegistradas() {
+            let clavesBase = JSON.parse(localStorage.getItem("clavesEstadosSistema") || "null");
+            if (!clavesBase) {
+                // Claves iniciales por defecto
+                clavesBase = {
+                    "Amazonas": "amazonas2026",
+                    "Anzoátegui": "anzoategui2026",
+                    "Apure": "apure2026",
+                    "Aragua": "aragua2026",
+                    "Barinas": "barinas2026",
+                    "Bolívar": "bolivar2026",
+                    "Carabobo": "carabobo2026",
+                    "Cojedes": "cojedes2026",
+                    "Delta Amacuro": "delta2026",
+                    "Distrito Capital": "capital2026",
+                    "Falcón": "falcon2026",
+                    "Guárico": "guarico2026",
+                    "Lara": "lara2026",
+                    "Mérida": "merida2026",
+                    "Miranda": "miranda2026",
+                    "Monagas": "monagas2026",
+                    "Nueva Esparta": "esparta2026",
+                    "Portuguesa": "portuguesa2026",
+                    "Sucre": "sucre2026",
+                    "Táchira": "tachira2026",
+                    "Trujillo": "trujillo2026",
+                    "La Guaira": "guaira2026",
+                    "Yaracuy": "yaracuy2026",
+                    "Zulia": "zulia2026"
+                };
+                localStorage.setItem("clavesEstadosSistema", JSON.stringify(clavesBase));
+            }
+            return clavesBase;
+        }
+
+        // Verificar si ya había una sesión abierta al recargar
+        document.addEventListener("DOMContentLoaded", function() {
+            const estadoGuardado = localStorage.getItem("estadoActual");
+            if(estadoGuardado) {
+                document.getElementById('seccionLogin').style.display = 'none';
+                document.getElementById('seccionRegistro').style.display = 'none';
+                document.getElementById('seccionPublicacion').style.display = 'block';
+                document.getElementById('txtEstadoActual').innerText = "Estado activo: " + estadoGuardado;
+                cargarPublicacionesAdmin(estadoGuardado);
+            }
+        });
+
+        function mostrarSeccionRegistro() {
+            document.getElementById('seccionLogin').style.display = 'none';
+            document.getElementById('seccionRegistro').style.display = 'block';
+        }
+
+        function volverAlLogin() {
+            document.getElementById('seccionRegistro').style.display = 'none';
+            document.getElementById('seccionLogin').style.display = 'block';
+        }
+
+        function guardarNuevaClave() {
+            const estadoReg = document.getElementById('selectEstadoRegistro').value;
+            const nuevaClave = document.getElementById('inputNuevaClave').value;
+
+            if(!estadoReg) {
+                alert("Por favor seleccione un estado.");
+                return;
+            }
+            if(!nuevaClave) {
+                alert("Por favor ingrese la nueva llave de acceso.");
+                return;
+            }
+
+            let clavesPorEstado = obtenerClavesRegistradas();
+            clavesPorEstado[estadoReg] = nuevaClave; // Asigna o actualiza la clave del estado
+
+            localStorage.setItem("clavesEstadosSistema", JSON.stringify(clavesPorEstado));
+            alert("¡Llave de acceso generada con éxito para el estado de " + estadoReg + "!");
+            
+            // Limpiar y volver al login
+            document.getElementById('selectEstadoRegistro').value = "";
+            document.getElementById('inputNuevaClave').value = "";
+            volverAlLogin();
+        }
+
+        function ingresarPanel() {
+            const estado = document.getElementById('selectEstadoLogin').value;
+            const clave = document.getElementById('inputClave').value;
+
+            if(!estado) {
+                alert("Por favor seleccione un estado.");
+                return;
+            }
+            if(!clave) {
+                alert("Por favor ingrese la llave de acceso.");
+                return;
+            }
+
+            let clavesPorEstado = obtenerClavesRegistradas();
+
+            if(clavesPorEstado[estado] && clavesPorEstado[estado] === clave) { 
+                localStorage.setItem("estadoActual", estado);
+                document.getElementById('seccionLogin').style.display = 'none';
+                document.getElementById('seccionPublicacion').style.display = 'block';
+                document.getElementById('txtEstadoActual').innerText = "Estado activo: " + estado;
+                cargarPublicacionesAdmin(estado);
+            } else {
+                alert("Llave de acceso incorrecta para el estado de " + estado + ". Si no la tienes, puedes generarla usando la opción de registro.");
+            }
+        }
+
+        function publicarNoticia() {
+            const titulo = document.getElementById('inputTitulo').value;
+            const contenido = document.getElementById('inputContenidos').value;
+            const estado = localStorage.getItem("estadoActual");
+            const fileInput = document.getElementById('inputImagen');
+
+            if(!titulo || !contenido) {
+                alert("Completa el título y el contenido.");
+                return;
+            }
+
+            let imagenUrl = "";
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagenUrl = e.target.result;
+                    guardarNoticiaEnStorage(titulo, contenido, estado, imagenUrl);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                guardarNoticiaEnStorage(titulo, contenido, estado, "");
+            }
+        }
+
+        function guardarNoticiaEnStorage(titulo, contenido, estado, imagenUrl) {
+            let publicaciones = JSON.parse(localStorage.getItem("publicacionesEscuela") || "[]");
+            
+            const nuevaPub = {
+                id: Date.now(),
+                estado: estado,
+                titulo: titulo,
+                contenido: contenido,
+                imagen: imagenUrl,
+                fecha: new Date().toLocaleDateString(),
+                comentarios: []
+            };
+
+            publicaciones.unshift(nuevaPub);
+            localStorage.setItem("publicacionesEscuela", JSON.stringify(publicaciones));
+
+            alert("¡Publicación realizada con éxito!");
+            
+            document.getElementById('inputTitulo').value = "";
+            document.getElementById('inputContenidos').value = "";
+            document.getElementById('inputImagen').value = "";
+            cargarPublicacionesAdmin(estado);
+        }
+
+        function cargarPublicacionesAdmin(estado) {
+            const contenedor = document.getElementById('listaAdminPublicaciones');
+            contenedor.innerHTML = "";
+
+            let publicaciones = JSON.parse(localStorage.getItem("publicacionesEscuela") || "[]");
+            let publicacionesEstado = publicaciones.filter(p => p.estado.toLowerCase() === estado.toLowerCase());
+
+            if(publicacionesEstado.length === 0) {
+                contenedor.innerHTML = `<p style="font-size: 13px; color: #718096; font-style: italic;">No has realizado publicaciones recientes en este estado.</p>`;
+                return;
+            }
+
+            publicacionesEstado.forEach(pub => {
+                let item = document.createElement("div");
+                item.className = "admin-item-publicacion";
+                item.innerHTML = `
+                    <div>
+                        <strong style="font-size: 14px; color: #1a365d;">${pub.titulo}</strong>
+                        <span style="display: block; font-size: 12px; color: #718096;">Fecha: ${pub.fecha}</span>
+                    </div>
+                    <button class="btn-eliminar-admin" onclick="eliminarPublicacionAdmin(${pub.id})">🗑️ Borrar</button>
+                `;
+                contenedor.appendChild(item);
+            });
+        }
+
+        function eliminarPublicacionAdmin(id) {
+            if(confirm("¿Estás seguro de que deseas borrar esta publicación?")) {
+                let publicaciones = JSON.parse(localStorage.getItem("publicacionesEscuela") || "[]");
+                publicaciones = publicaciones.filter(p => p.id !== id);
+                localStorage.setItem("publicacionesEscuela", JSON.stringify(publicaciones));
+                
+                const estadoActual = localStorage.getItem("estadoActual");
+                cargarPublicacionesAdmin(estadoActual);
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem("estadoActual");
+            location.reload();
+        }
+    </script>
+</body>
+</html>

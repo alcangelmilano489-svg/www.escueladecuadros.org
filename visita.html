@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Visitantes - Escuela de Cuadros</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <!-- Cabecera exclusiva para visitantes -->
+    <header class="public-header">
+        <h1>📚 Escuela de Cuadros</h1>
+        <div class="header-controls">
+            <select id="filtroEstado" onchange="filtrarPublicaciones()">
+                <option value="">Todos los Estados</option>
+                <option value="Amazonas">Amazonas</option>
+                <option value="Anzoátegui">Anzoátegui</option>
+                <option value="Apure">Apure</option>
+                <option value="Aragua">Aragua</option>
+                <option value="Barinas">Barinas</option>
+                <option value="Bolívar">Bolívar</option>
+                <option value="Carabobo">Carabobo</option>
+                <option value="Cojedes">Cojedes</option>
+                <option value="Delta Amacuro">Delta Amacuro</option>
+                <option value="Distrito Capital">Distrito Capital</option>
+                <option value="Falcón">Falcón</option>
+                <option value="Guárico">Guárico</option>
+                <option value="Lara">Lara</option>
+                <option value="Mérida">Mérida</option>
+                <option value="Miranda">Miranda</option>
+                <option value="Monagas">Monagas</option>
+                <option value="Nueva Esparta">Nueva Esparta</option>
+                <option value="Portuguesa">Portuguesa</option>
+                <option value="Sucre">Sucre</option>
+                <option value="Táchira">Táchira</option>
+                <option value="Trujillo">Trujillo</option>
+                <option value="La Guaira">La Guaira</option>
+                <option value="Yaracuy">Yaracuy</option>
+                <option value="Zulia">Zulia</option>
+            </select>
+            <button class="btn-seguir" onclick="alert('¡Gracias por seguir la página! Recibirás notificaciones de actualizaciones.')">🔔 Seguir Página</button>
+        </div>
+    </header>
+
+    <!-- ALERTA DE NOTIFICACIÓN DE NUEVA PUBLICACIÓN -->
+    <div id="alertaNotificacion" class="alerta-novedad" style="display: none;">
+        📢 <span id="textoAlertaNovedad">¡Hay nueva información publicada!</span>
+    </div>
+
+    <!-- SECCIÓN DE BIENVENIDA -->
+    <section class="welcome-section">
+        <h2>¡Bienvenidos a Escuela de Cuadros!</h2>
+        <p>Espacio informativo y de formación en tiempo real. Mantente al día con los reportes oficiales y contenidos publicados desde cada estado. Selecciona tu estado en el filtro superior para ver la información detallada.</p>
+    </section>
+
+    <!-- CONTENEDOR DE PUBLICACIONES -->
+    <main id="feedNoticias">
+        <!-- Las publicaciones se cargan dinámicamente aquí -->
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            verificarUltimaNotificacion();
+            cargarPublicaciones();
+        });
+
+        function verificarUltimaNotificacion() {
+            let publicaciones = JSON.parse(localStorage.getItem("publicacionesEscuela") || "[]");
+            if (publicaciones.length > 0) {
+                const ultima = publicaciones[0];
+                const alertaDiv = document.getElementById("alertaNotificacion");
+                const textoAlerta = document.getElementById("textoAlertaNovedad");
+                
+                textoAlerta.innerHTML = `¡Nuevo reporte oficial publicado por el estado <b>${ultima.estado.toUpperCase()}</b>: "${ultima.titulo}"!`;
+                alertaDiv.style.display = "block";
+            }
+        }
+
+        function cargarPublicaciones(filtro = "") {
+            const feed = document.getElementById("feedNoticias");
+            feed.innerHTML = "";
+
+            let publicaciones = JSON.parse(localStorage.getItem("publicacionesEscuela") || "[]");
+
+            if(filtro) {
+                publicaciones = publicaciones.filter(p => p.estado.toLowerCase() === filtro.toLowerCase());
+            }
+
+            if(publicaciones.length === 0) {
+                feed.innerHTML = `<div class="noticia-card" style="text-align: center; color: #718096;"><p>No hay publicaciones registradas para este filtro.</p></div>`;
+                return;
+            }
+
+            publicaciones.forEach(pub => {
+                let card = document.createElement("div");
+                card.className = "noticia-card";
+
+                let imagenHtml = pub.imagen ? `<img src="${pub.imagen}" class="noticia-imagen" alt="Imagen adjunta">` : "";
+
+                let comentariosHtml = "";
+                if(pub.comentarios && pub.comentarios.length > 0) {
+                    pub.comentarios.forEach(c => {
+                        comentariosHtml += `<div class="lista-comentarios">• ${c}</div>`;
+                    });
+                } else {
+                    comentariosHtml = `<p style="font-size: 13px; color: #a0aec0; font-style: italic;">Sin comentarios aún.</p>`;
+                }
+
+                card.innerHTML = `
+                    <div class="noticia-meta">
+                        <span class="badge-estado">📍 ${pub.estado}</span>
+                        <span>📅 ${pub.fecha}</span>
+                    </div>
+                    <h2>${pub.titulo}</h2>
+                    <p style="line-height: 1.6; color: #4a5568;">${pub.contenido}</p>
+                    ${imagenHtml}
+                    <div class="comentarios-section">
+                        <strong>Comentarios (${pub.comentarios ? pub.comentarios.length : 0})</strong>
+                        <div style="margin-top: 8px;">${comentariosHtml}</div>
+                        <div class="comentario-input-group">
+                            <input type="text" id="comentario-${pub.id}" placeholder="Escribe tu comentario...">
+                            <button onclick="agregarComentario(${pub.id})">Comentar</button>
+                        </div>
+                    </div>
+                `;
+                feed.appendChild(card);
+            });
+        }
+
+        function filtrarPublicaciones() {
+            const estadoSeleccionado = document.getElementById("filtroEstado").value;
+            cargarPublicaciones(estadoSeleccionado);
+        }
+
+        function agregarComentario(idPub) {
+            const input = document.getElementById(`comentario-${idPub}`);
+            const textoComentario = input.value.trim();
+
+            if(!textoComentario) return;
+
+            let publicaciones = JSON.parse(localStorage.getItem("publicacionesEscuela") || "[]");
+            
+            publicaciones = publicaciones.map(p => {
+                if(p.id === idPub) {
+                    if(!p.comentarios) p.comentarios = [];
+                    p.comentarios.push(textoComentario);
+                }
+                return p;
+            });
+
+            localStorage.setItem("publicacionesEscuela", JSON.stringify(publicaciones));
+            filtrarPublicaciones();
+        }
+    </script>
+</body>
+</html>
